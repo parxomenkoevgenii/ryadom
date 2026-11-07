@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+ <meta name="theme-color" content="#f5f6f3"><title>Рядом — личный чат</title>
+ <link rel="icon" href="/icon.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>
+</head>
+<body>
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+ <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 4h16v13H10l-6 4V4Z"/><path d="M9 10h.01M15 10h.01"/></symbol>
+ <symbol id="i-link" viewBox="0 0 24 24"><path d="m10 13 4-4m-6 7-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0m2 1 1-1a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0" transform="translate(1 0)"/></symbol>
+ <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+ <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 18h4"/></symbol>
+ <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="13" rx="2"/><path d="M8 21h8m-4-5v5"/></symbol>
+ <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0m-11 4a6 6 0 0 1 8 0m-4 4h.01"/></symbol>
+ <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol>
+ <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1"/><path d="m3 17 6-6 4 4 3-3 5 5"/></symbol>
+ <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7V5Z"/></symbol>
+ <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H5v20h14V7l-5-5Zm0 0v6h5M8 13h8m-8 4h6"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+ <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></symbol>
+ <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+ <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+ <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="9" cy="18" r="2"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></symbol>
+ <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></symbol>
+</defs></svg>
+
+<main id="join-screen" class="join-screen" hidden>
+ <div class="join-card">
+  <img class="join-logo" src="/icon.svg" alt=""><span class="eyebrow">ВАШ ЛИЧНЫЙ МИНИЧАТ</span>
+  <h1>Будем рядом.</h1><p class="lead">Текст, фото и видео между вашими устройствами. В одной домашней сети.</p>
+  <form id="join-form">
+   <label for="device-name">Имя этого устройства</label><input id="device-name" maxlength="40" placeholder="Например, мой телефон" autocomplete="off" required>
+   <label for="pair-code">Код с главного устройства</label><input id="pair-code" class="code-input" placeholder="0000 0000" inputmode="numeric" autocomplete="one-time-code" maxlength="9" pattern="[0-9 ]{8,9}" required>
+   <p class="field-hint">Откройте «Подключить устройство» в чате на компьютере.</p>
+   <p id="join-error" class="form-error" role="alert"></p><button id="join-button" class="button primary" type="submit">Подключиться <svg><use href="#i-arrow"/></svg></button>
+  </form>
+  <div class="join-footer"><svg><use href="#i-lock"/></svg>Без аккаунтов. Без облака. Только свои.</div>
+ </div><div class="join-caption">Рядом <span>·</span> Сделано для ваших устройств</div>
+</main>
+
+<div id="app" class="app" hidden>
+ <aside class="sidebar">
+  <a class="brand" href="/" aria-label="Рядом, главный экран"><img src="/icon.svg" alt=""><span>рядом<span class="brand-dot">.</span></span></a>
+  <div class="space-label">ЛИЧНОЕ ПРОСТРАНСТВО</div>
+  <button class="room selected" id="all-room"><span class="room-icon"><svg><use href="#i-chat"/></svg></span><span><strong>Свои устройства</strong><small>Всё в одном чате</small></span><span class="room-dot"></span></button>
+  <div class="devices-heading"><span>МОИ УСТРОЙСТВА</span><span id="device-count">0</span></div>
+  <div id="device-list" class="device-list"></div>
+  <button class="add-device" id="sidebar-connect"><svg><use href="#i-plus"/></svg>Подключить устройство</button>
+  <div class="sidebar-bottom"><div class="local-card"><svg><use href="#i-wifi"/></svg><div><strong>В пределах вашей сети</strong><p>Переписка и файлы остаются<br>на главном устройстве.</p></div></div><button class="profile" id="profile-button"><span class="avatar" id="profile-initial">Я</span><span><strong id="profile-name">Моё устройство</strong><small>Это устройство</small></span><svg><use href="#i-settings"/></svg></button></div>
+ </aside>
+ <section class="chat">
+  <header class="chat-header"><div class="header-title"><div class="header-mark"><svg><use href="#i-chat"/></svg></div><div><h1>Свои устройства</h1><div class="connection"><span id="connection-dot" class="status-dot"></span><span id="connection-text">Подключаемся…</span></div></div></div><div class="header-actions"><button id="search-toggle" class="icon-button" title="Поиск по загруженным сообщениям" aria-label="Поиск"><svg><use href="#i-search"/></svg></button><button id="connect-button" class="button secondary"><svg><use href="#i-link"/></svg><span>Подключить устройство</span></button><button id="mobile-settings" class="icon-button mobile-only" aria-label="Настройки"><svg><use href="#i-settings"/></svg></button></div></header>
+  <div class="chat-toolbar"><div class="tabs" role="group" aria-label="Тип сообщений"><button class="tab active" id="tab-all" aria-pressed="true">Все сообщения</button><button class="tab" id="tab-media" aria-pressed="false">Фото и видео</button></div><span class="local-label"><svg><use href="#i-lock"/></svg>Личный чат</span></div>
+  <div id="search-bar" class="search-bar" hidden><svg><use href="#i-search"/></svg><input id="search" type="search" placeholder="Поиск по загруженным сообщениям" aria-label="Поиск по загруженным сообщениям"><button id="search-close" class="icon-button" aria-label="Закрыть поиск"><svg><use href="#i-close"/></svg></button></div>
+  <div id="connection-banner" class="connection-banner" role="status" hidden>Связь прервалась. Проверьте домашнюю сеть и главное устройство. Подключаемся снова…</div>
+  <div id="scroll-area" class="scroll-area">
+   <button id="load-older" class="older-button" hidden>Показать предыдущие сообщения</button>
+   <div id="empty" class="empty-state"><div class="empty-orbit"><span class="orbit-icon orbit-phone"><svg><use href="#i-phone"/></svg></span><span class="empty-logo"><svg><use href="#i-chat"/></svg></span><span class="orbit-icon orbit-image"><svg><use href="#i-image"/></svg></span><span class="orbit-spark spark-one"></span><span class="orbit-spark spark-two"></span></div><span class="eyebrow">МАЛЕНЬКОЕ МЕСТО ДЛЯ ВАШИХ ВЕЩЕЙ</span><h2>Всё нужное — рядом.</h2><p>Перекиньте фото на компьютер, сохраните ссылку<br class="desktop-break">или отправьте видео на телефон.</p><div class="empty-tags"><span><svg><use href="#i-chat"/></svg>Текст</span><span><svg><use href="#i-image"/></svg>Фото</span><span><svg><use href="#i-play"/></svg>Видео</span></div></div>
+   <div id="no-results" class="no-results" hidden>Пока ничего не найдено</div><div id="messages" class="messages" aria-live="polite" aria-relevant="additions"></div>
+  </div>
+  <div class="composer-wrap"><div id="attachment-list" class="attachment-list" hidden></div><form id="message-form" class="composer"><button type="button" id="attach-button" class="attach-button" aria-label="Прикрепить фото, видео или файл" title="Прикрепить файл"><svg><use href="#i-plus"/></svg></button><textarea id="message-input" rows="1" maxlength="12000" placeholder="Напишите себе что-нибудь…" aria-label="Сообщение"></textarea><button id="send-button" class="send-button" type="submit" aria-label="Отправить" disabled><svg><use href="#i-arrow"/></svg></button></form><input id="file-input" type="file" multiple hidden><div class="composer-hint"><span><svg><use href="#i-wifi"/></svg>Передаётся напрямую в вашей сети</span><span class="key-hint">Enter — отправить · Shift + Enter — новая строка</span><span class="mobile-only">до 512 МБ</span></div></div>
+  <div id="drop-overlay" class="drop-overlay" hidden><svg><use href="#i-download"/></svg><h2>Отпустите файлы здесь</h2><p>Фото, видео и всё, чем хочется поделиться</p></div>
+ </section>
+</div>
+
+<dialog id="settings-dialog" class="settings-dialog"><div class="dialog-head"><div><span class="eyebrow">РЯДОМ · ВЕРСИЯ 0.1</span><h2 id="dialog-title">Подключение и устройства</h2></div><button class="icon-button" id="close-settings" aria-label="Закрыть"><svg><use href="#i-close"/></svg></button></div><div class="dialog-body">
+ <section id="pairing-section"><p class="dialog-intro">Подключите устройства к одному домашнему роутеру: по кабелю или Wi-Fi. На другом устройстве откройте Рядом или адрес ниже в браузере.</p><label>1. Адрес главного устройства</label><div id="server-addresses" class="server-addresses"></div><p id="no-address" class="field-hint" hidden>Подключите главное устройство к роутеру по кабелю или Wi-Fi. Затем откройте это окно снова.</p><label class="pairing-label">2. Код подключения</label><div class="pairing-box"><span id="pairing-code">•••• ••••</span><button class="icon-button" id="copy-code" aria-label="Скопировать код"><svg><use href="#i-copy"/></svg></button></div><div class="pairing-caption"><span id="pairing-expiry"></span><button id="new-code" class="text-button">Новый код</button></div><button id="disable-pairing" class="text-button muted">Завершить подключение новых устройств</button></section>
+ <section id="client-info" hidden><div class="info-card"><svg><use href="#i-wifi"/></svg><p>Вы подключены к личному чату. Код для других устройств доступен на главном устройстве.</p></div></section>
+ <section class="settings-section"><h3>Это устройство</h3><form id="rename-form" class="rename-form"><input id="rename-input" maxlength="40" aria-label="Имя устройства" required><button class="button secondary" type="submit">Сохранить</button></form></section>
+ <section class="settings-section"><h3>Подключённые устройства <span id="settings-count"></span></h3><div id="settings-devices"></div></section>
+ <section class="privacy-note"><svg><use href="#i-lock"/></svg><p>Файлы хранятся на главном устройстве. Используйте свою доверенную домашнюю сеть: передача внутри неё идёт без сквозного шифрования.</p></section>
+ <button id="change-role-button" class="button secondary" hidden>Выбрать главное устройство заново</button><br><button id="logout-button" class="text-button danger">Выйти на этом устройстве</button><button id="stop-button" class="text-button danger" hidden>Выключить чат на всех устройствах</button>
+</div></dialog>
+<dialog id="image-dialog" class="image-dialog"><button id="close-image" class="icon-button" aria-label="Закрыть изображение"><svg><use href="#i-close"/></svg></button><img id="full-image" alt="Фото из чата"><a id="full-image-download" class="button secondary" download><svg><use href="#i-download"/></svg>Скачать оригинал</a></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+</body></html>
