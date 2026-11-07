@@ -23,11 +23,16 @@ namespace Ryadom {
   private LanDiscovery discovery;
   private Process host;
   private int tries;
-  private bool stopping,ready;
+  private bool stopping,ready,firewallChecked;
   private string networkStamp=null;
   private const string BaseUrl="http://127.0.0.1:4280/";
-  [STAThread] private static void Main() {
+  [STAThread] private static void Main(string[] args) {
    Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);Directory.CreateDirectory(Data);
+   if(args.Length>0&&args[0]=="--firewall-check") {
+    string text;try{text=FirewallAdvisor.Inspect().ToString();}catch(Exception e){text="Не удалось проверить брандмауэр: "+e.Message;}text+=Environment.NewLine+"Приложение: "+Application.ExecutablePath;
+    if(args.Length>1)File.WriteAllText(args[1],text,new UTF8Encoding(false));else MessageBox.Show(text,"Рядом · брандмауэр и сеть");
+    return;
+   }
    bool first;
    using(var mutex=new Mutex(true,"Local\\Ryadom.PersonalChat",out first)) {
     if(!first){OpenChat(false);return;}
@@ -38,7 +43,7 @@ namespace Ryadom {
    choice=picker;File.WriteAllText(Path.Combine(Data,"desktop-role"),choice.Hosting?"host":"client");if(!choice.Hosting)File.WriteAllText(Path.Combine(Data,"last-target"),choice.Target+":"+choice.TargetPort);
    File.Delete(Path.Combine(Data,"choose-role"));
    tray=new NotifyIcon{Icon=Icon.ExtractAssociatedIcon(Application.ExecutablePath),Text=choice.Hosting?"Рядом · главное устройство":"Рядом · подключён к чату"};
-   var menu=new ContextMenuStrip();menu.Items.Add("Открыть чат",null,(s,e)=>OpenChat(false));if(choice.Hosting)menu.Items.Add("Подключить устройство",null,(s,e)=>OpenChat(true));
+   var menu=new ContextMenuStrip();menu.Items.Add("Открыть чат",null,(s,e)=>OpenChat(false));if(choice.Hosting){menu.Items.Add("Подключить устройство",null,(s,e)=>OpenChat(true));menu.Items.Add("Проверить брандмауэр и сеть",null,(s,e)=>FirewallAdvisor.ShowReport());}
    menu.Items.Add("Выбрать другое главное устройство",null,(s,e)=>{if(!choice.Hosting||MessageBox.Show("Остановить этот чат и выбрать главное устройство заново? История останется на этом компьютере.","Рядом",MessageBoxButtons.OKCancel)==DialogResult.OK)Stop(true);});
    menu.Items.Add(new ToolStripSeparator());menu.Items.Add("Папка с данными",null,(s,e)=>Process.Start("explorer.exe",Data));menu.Items.Add("Выключить Рядом",null,(s,e)=>Stop(false));tray.ContextMenuStrip=menu;tray.DoubleClick+=(s,e)=>OpenChat(false);tray.Visible=true;
    string bin=Path.Combine(Data,"bin");Directory.CreateDirectory(bin);string digest;using(var reader=new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("HostHash")))digest=reader.ReadToEnd().Trim();
@@ -64,7 +69,7 @@ namespace Ryadom {
   }
   private void Tick(object sender,EventArgs args) {
    if(stopping)return;if(File.Exists(Path.Combine(Data,"choose-role"))){File.Delete(Path.Combine(Data,"choose-role"));Stop(true);return;}
-   if(ready){if(host.HasExited){Stop(false);return;}if(choice.Hosting)try{RefreshHostNetworks(LanInterfaces.Read());}catch{}return;}
+   if(ready){if(host.HasExited){Stop(false);return;}if(choice.Hosting){if(!firewallChecked){firewallChecked=true;FirewallAdvisor.Advise(Data);}try{RefreshHostNetworks(LanInterfaces.Read());}catch{}}return;}
    tries++;try{var request=(HttpWebRequest)WebRequest.Create(BaseUrl+"api/local/status");request.Proxy=null;request.Timeout=300;using(var response=request.GetResponse()){}ready=true;timer.Interval=4000;OpenChat(false);}catch{if(tries>=35||host.HasExited){MessageBox.Show("Не удалось запустить Рядом: порт 4280 занят или локальный доступ заблокирован. Повторите выбор главного устройства.","Рядом");Stop(true);}}
   }
   private static void OpenChat(bool connect) {

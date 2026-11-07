@@ -1,8 +1,8 @@
-# Рядом 0.1
+# Рядом 0.1.2
 
 Личный мини-чат для Windows и Android. Обменивайтесь текстом, фото, видео и файлами между своими устройствами в одной домашней сети — без интернета и аккаунтов.
 
-**[Скачать для Windows](https://github.com/parxomenkoevgenii/ryadom/releases/download/v0.1/Ryadom-Windows.exe) · [Скачать для Android](https://github.com/parxomenkoevgenii/ryadom/releases/download/v0.1/Ryadom-Android.apk) · [Все файлы выпуска](https://github.com/parxomenkoevgenii/ryadom/releases/tag/v0.1)**
+**[Скачать для Windows](https://github.com/parxomenkoevgenii/ryadom/releases/download/v0.1.2/Ryadom-Windows.exe) · [Скачать для Android](https://github.com/parxomenkoevgenii/ryadom/releases/download/v0.1.2/Ryadom-Android.apk) · [Все файлы выпуска](https://github.com/parxomenkoevgenii/ryadom/releases/tag/v0.1.2)**
 
 ## Возможности
 
@@ -11,6 +11,7 @@
 - **Любое главное устройство** — создайте чат на Windows-ПК или Android-телефоне; выбор можно изменить.
 - **Подключение по коду** — поиск устройств в сети или ввод адреса вручную.
 - **Работа с Happ** — прямое соединение через домашнюю сеть; при блокировке со стороны VPN понадобится исключение для Рядом.
+- **Брандмауэр** — приложение проверяет входящие подключения и подсказывает, что разрешить, если их блокирует брандмауэр Windows или сторонний (ESET, Kaspersky).
 
 ## Быстрый запуск
 
@@ -31,6 +32,6 @@
 | [scripts/](scripts/) | Сборка приложений и запуск проверок. |
 | [tests/](tests/) | Проверки передачи данных, доступа к чату и сетевых соединений. |
 | [docs/GUIDE.md](docs/GUIDE.md) | Подробная инструкция: установка, Happ, сеть, хранение данных и сборка из исходников. |
-| [CHANGELOG.md](CHANGELOG.md) | Что входит в выпуск 0.1. |
+| [CHANGELOG.md](CHANGELOG.md) | Что входит в выпуск 0.1.2. |
 
 Используйте доверенную домашнюю сеть: передача идёт без TLS и сквозного шифрования. Серверы проверены автоматическими тестами; APK на физическом телефоне пока не проверен. [Подробнее об ограничениях и проверках](docs/GUIDE.md).

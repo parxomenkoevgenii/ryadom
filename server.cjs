@@ -104,7 +104,7 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${host}`); const route = url.pathname;
   if(route.startsWith('/api/local/')) {
    if(req.socket.ryadomPeer||address(req.socket.remoteAddress)!=='127.0.0.1')throw error(403,'Только на этом устройстве');
-   if(route==='/api/local/status'&&req.method==='GET')return send(res,200,{app:'ryadom',version:'0.1.0',role:'host'});
+   if(route==='/api/local/status'&&req.method==='GET')return send(res,200,{app:'ryadom',version:'0.1.2',role:'host'});
    if(route==='/api/local/choose-role'&&req.method==='POST'&&process.env.RYADOM_ROLE_SIGNAL){fs.writeFileSync(process.env.RYADOM_ROLE_SIGNAL,'choose');return send(res,200,{ok:true});}
    if(route==='/api/local/quit'&&req.method==='POST'&&NATIVE_KEY&&req.headers['x-ryadom-native']===NATIVE_KEY){send(res,200,{ok:true});setTimeout(shutdown,200);return;}
    throw error(404,'Не найдено');
@@ -113,7 +113,7 @@ const server = http.createServer(async (req, res) => {
    const name = route === '/' ? 'index.html' : route.slice(1);
    res.writeHead(200, { 'Content-Type': { html:'text/html; charset=utf-8', js:'text/javascript; charset=utf-8', css:'text/css; charset=utf-8', svg:'image/svg+xml' }[name.split('.').pop()] }); return res.end(assets.get(name));
   }
-  if (route === '/api/health' && req.method === 'GET') return send(res, 200, { app:'ryadom', version:'0.1.0',name:os.hostname() });
+  if (route === '/api/health' && req.method === 'GET') return send(res, 200, { app:'ryadom', version:'0.1.2',name:os.hostname() });
   if (route === '/api/host-login' && req.method === 'POST') {
    if (!['127.0.0.1','::1'].includes(address(peer))||req.socket.ryadomPeer) throw error(403, 'Откройте чат на главном устройстве');
    const body = await json(req);
@@ -270,7 +270,7 @@ function startClientProxy(){
   const fail=(status,message)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify({error:message}));};
   if(req.socket.remoteAddress!=='127.0.0.1'||req.headers.host!==own||req.headers.origin&&req.headers.origin!==`http://${own}`)return fail(403,'Недопустимый источник');
   if(!['GET','HEAD'].includes(req.method)&&req.headers['x-ryadom']!=='1')return fail(403,'Недопустимый запрос');
-  if(req.url==='/api/local/status'){res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({app:'ryadom',role:'client',version:'0.1.0',target:target.origin}));}
+  if(req.url==='/api/local/status'){res.writeHead(200,{'Content-Type':'application/json'});return res.end(JSON.stringify({app:'ryadom',role:'client',version:'0.1.2',target:target.origin}));}
   if(req.url==='/api/local/choose-role'&&req.method==='POST'&&process.env.RYADOM_ROLE_SIGNAL){fs.writeFileSync(process.env.RYADOM_ROLE_SIGNAL,'choose');res.end('{"ok":true}');return;}
   if(req.url==='/api/local/quit'&&req.method==='POST'&&NATIVE_KEY&&req.headers['x-ryadom-native']===NATIVE_KEY){res.end('{"ok":true}');setTimeout(()=>process.exit(0),200);return;}
   if(req.url.startsWith('/api/local/')||req.url.startsWith('/api/host-login'))return fail(403,'Недоступно при подключении к другому устройству');
