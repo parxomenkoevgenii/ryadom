@@ -4,6 +4,8 @@
 
 ## Готовые приложения
 
+**[Скачать выпуск 0.1 для Windows и Android](https://github.com/parxomenkoevgenii/ryadom/releases/tag/v0.1)** — готовые приложения, исходники и инструкция находятся в разделе Releases.
+
 - `dist/Ryadom-Windows.exe` — Windows 10/11 x64; один переносимый файл, Node.js отдельно не требуется.
 - `dist/Ryadom-Android.apk` — Android 8.0+; клиент и главное устройство в одном приложении.
 - `dist/Начать здесь.txt` — короткая инструкция.
