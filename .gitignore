@@ -6,6 +6,11 @@ data/
 *.log
 android/local.properties
 android/signing/
+# Секреты подписи не должны попадать в репозиторий:
+*.pfx
+*.p12
+*.password
+code-signing.*
 .env
 .env.*
 *.jks

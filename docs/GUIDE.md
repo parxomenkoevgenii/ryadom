@@ -116,7 +116,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-windows.ps1
 
 Android собирается с JDK 21, SDK Platform 35 и Build Tools 36.0.0 без Gradle. Пути можно задать параметрами `-SdkPath` и `-JdkPath`. APK использует системные Android API. JVM-тесты дополнительно скачивают `org.json:json:20240303` из Maven Central с проверкой SHA-256; библиотека в APK не добавляется.
 
-Ключ подписи находится в `android/signing`. Сохраните его для обновлений и не публикуйте. Папки ключей, сборок, зависимостей тестов и данных исключены в `.gitignore`.
+Ключи подписи хранятся **вне репозитория и вне OneDrive** — по умолчанию в `%LOCALAPPDATA%\RyadomSigning` (ключ APK `ryadom.jks` и пароль, сертификат Authenticode, ключ OpenSSH). Путь можно переопределить параметром `-SigningDir` или переменной `RYADOM_SIGNING_DIR`. Релизная сборка APK **не создаёт новый ключ**: если ключа нет, сборка останавливается (для первого локального стенда есть явный флаг `-CreateSigningKey`). Ключ APK нельзя терять — иначе APK не сможет обновиться поверх установленного. Подробности подписи и проверки релизов — в [RELEASE-SIGNING.md](RELEASE-SIGNING.md). Папки ключей, сборок, зависимостей тестов и данных исключены в `.gitignore`.
 
 ### Проверка версии 0.1
 
